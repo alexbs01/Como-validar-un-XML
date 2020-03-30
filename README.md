@@ -44,7 +44,7 @@ definiciónDelDTD
 ]>
 ```
 
-## Declaración del contenido de los elementos
+### Declaración del contenido de los elementos
 Los elementos de un XML van entre etiquetas, y con los siguientes atributos se puede definir el contenido del objeto en cuestion.  
 Tienen la siguiente forma:
 ```dtd
@@ -72,12 +72,12 @@ En esta bibliteca puede haber expositores con una única revista y estánterías
 			<!ELEMENT libro (#PCDATA)>
 ```
 
-## Declaración de atributos
+### Declaración de atributos
 
 Las etiquetas a parte tener un contenido, también pueden tener un atributo en la entiqueta de apertura.  
 Un atributo tiene la siguiente forma:
 ```dtd
-<!ATTLIS nombreDelElemento
+<!ATTLIST nombreDelElemento
 	1_nombreDelAtributo tipo valor
 	2_nombreDelAtributo tipo valor
 >
@@ -150,3 +150,98 @@ Ahora con este ejemplo tendremos una visión mejor de como se valida un XML con 
 				cliente (final|distribuidor) "Sin asignar"
 				moneda (euro|dolar) "euro">
 ```
+
+## Que es un Schema
+
+Un **Schema** es un lenguaje de esquema que se utiliza para describir la estructura y las restricciones de los contenidos de un documento XML de forma precisa.  
+La validación de un XML mediante un Schema consta de una doble validación puesto que el Schema a su vez se valida antes del validar al XML. La validación del Schema (que es un archivo .xsd), se hace poniendo las siguiente direscciones de Internet.
+
+```xsd
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="http://www.w3.org/2001/XMLSchema.xsd"
+>
+	*
+	*
+	*
+</xs:schema>
+```
+
+### Tipos de datos predefinidos
+
+En Schemas, los datos predefinidos llevan el prefijo **xs:**, los más comunes son:  
+
+1. **Para texto**: xs:string.  
+2. **Para números**: xs:byte, xs:decimal, xs:double, xs:float, xs:integer, xs:long, xs:negativeInteger (<0), xs:nonNegativeInteger (>=0), xs:positiveInteger (>0) y xs:nonPositiveInteger (<=0).  
+3. **Para fecha y hora**: xs:date, xs:dateTime, xs:duration, xs:gDay, xs:gMonth, xs:gMonthDay, xs:gYear, xs:gYearMonth y xs:time.  
+4. **Para valores lógicos**: xs:boolean.  
+
+Las fechas están con la forma *año-mes-día*, *dateTime* tiene la forma *año-mes-día**T**horas:minutos:segundos* y gMonthDay lleva dos guiones antes del mes, por lo que tendrá la forma *--mes-día*  
+
+### Elementos simples
+
+Como es normal, al empezar a aprender una cosa, se empieza por lo más fácil, que en este caso no coincide con el principo, por ahora solo hablaré de elementos de tipo simple, que son aquellos que no contienen ninguna etiqueta en su interior, solo contienen datos.  
+
+Un elemento simple tiene la siguiente forma:  
+
+```xsd
+<xs:element name="nombreDelElemento" type="tipoDelElemento"/>
+```
+
+Donde el nombre del elemento es el nombre de la etiqueta correspondiente en el XML, y el tipo del elemento puede ser uno de los tipos de datos que puse arriba, o también se puede usar para aplicar otro tipo restricciones mediante un simpleType en otra parte del documento que también podrá ser usada por otra etiqueta del XML.  
+
+### Formas de aplicar restricciones a los elementos
+
+Las restricciones que se le aplican a los elementos de un XML pueden ser puestos dentro o fuera de la etiqueta ```xs:element``` teniendo las siguientes formas:  
+
+```xsd
+<xs:element name="nombreDelElemento">
+	<xs:simpleType>
+	*
+	*
+	*
+	</xs:simpleType>
+</xs:element>
+```
+
+```xsd
+<xs:element name="nombreDelElemento" type="tipoDelElemento"/>
+
+<xs:simpleType name="tipoDelElemento">
+	*
+	*
+	*
+</xs:simpleType>
+```
+
+Como podemos ver la segundo opción tiene el simpleType fuera de la etiqueta del elemento, en este caso, que es el que yo recomiendo se puede usar el mismo simpleType en caso de que se pueda reutilizar, además de que se pueden combinar unos con otros para crear restricciones más complejas.  
+**IMPORTANTE: Para usar la segunda opción no se puede usar un dato predefinido de los que puse más arriba, en este caso hay que usar una palabra que lo identifique puesto que la restricción por ser un número o un texto se aplicará en el simpleType. Por ejemplo, para un DNI se podría poner type="tipoDNI" y que linkee con un simpleType que tenga un patrón para DNI.**  
+
+### Propiedades de los elementos
+
+De las propiedades de los elementos de momento expliqué solo dos, *name* y *type*, pero hay más:
+
+1. **name**: Se usa para atribuir una etiqueta del XML al elemento del Schema.  
+2. **type**: Se utiliza para aplicar una restricción del tipo xs:integer o xs:string, o para referenciar a una restricción externa al elemento.  
+3. **maxOccurs**: Establece un número máximo de ocurrencias de un elemento puesto que por defecto debe aparecer una vez, si a esta propiedad la ponemos *unbounded* significará que no tendrá límite.  
+4. **minOccurs**: Establece un número mínimo de ocurrencias de un elemento, si ponemos que es cero, hacemos que sea opcional.  
+5. **default**: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
