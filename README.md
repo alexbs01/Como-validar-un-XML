@@ -191,9 +191,22 @@ Un elemento simple tiene la siguiente forma:
 
 Donde el nombre del elemento es el nombre de la etiqueta correspondiente en el XML, y el tipo del elemento puede ser uno de los tipos de datos que puse arriba, o también se puede usar para aplicar otro tipo restricciones mediante un simpleType en otra parte del documento que también podrá ser usada por otra etiqueta del XML.  
 
-### Formas de aplicar restricciones a los elementos
+### Propiedades de los elementos
 
-Las restricciones que se le aplican a los elementos de un XML pueden ser puestos dentro o fuera de la etiqueta ```xs:element``` teniendo las siguientes formas:  
+De las propiedades de los elementos de momento expliqué solo dos, *name* y *type*, pero hay más:
+
+1. **name**: Se usa para atribuir una etiqueta del XML al elemento del Schema.  
+2. **type**: Se utiliza para aplicar una restricción del tipo xs:integer o xs:string, o para referenciar a una restricción externa al elemento.  
+3. **maxOccurs**: Establece un número máximo de ocurrencias de un elemento puesto que por defecto debe aparecer una vez, si a esta propiedad la ponemos *unbounded* significará que no tendrá límite.  
+4. **minOccurs**: Establece un número mínimo de ocurrencias de un elemento, si ponemos que es cero, hacemos que sea opcional.  
+5. **default**: Pone un valor por defecto al elemento en caso de que quede vacío en el XML.  
+6. **fixed**: Asigna un valor fijo que no se puede cambiar, como es normal, esta opción no es comppatible con *default*.  
+7. **ref**: Su valor es el nombre de otro elemento del Schema, y se le atribuyen las restricciones del elemento al que se está referenciando.  
+
+### Los simpleType
+
+Los simpleType son la forma de agrupar las características de un elemento del XML, ya sea una restricción, una lista, o una unión de ambas.  
+Existen dos formas de declarar las características de un elemento mediante un simpleType, estas son, o dentro de la etiqueta element, o fuera.  
 
 ```xsd
 <xs:element name="nombreDelElemento">
@@ -216,23 +229,172 @@ Las restricciones que se le aplican a los elementos de un XML pueden ser puestos
 ```
 
 Como podemos ver la segundo opción tiene el simpleType fuera de la etiqueta del elemento, en este caso, que es el que yo recomiendo se puede usar el mismo simpleType en caso de que se pueda reutilizar, además de que se pueden combinar unos con otros para crear restricciones más complejas.  
-**IMPORTANTE: Para usar la segunda opción no se puede usar un dato predefinido de los que puse más arriba, en este caso hay que usar una palabra que lo identifique puesto que la restricción por ser un número o un texto se aplicará en el simpleType. Por ejemplo, para un DNI se podría poner type="tipoDNI" y que linkee con un simpleType que tenga un patrón para DNI.**  
 
-### Propiedades de los elementos
+-----
+**IMPORTANTE**: Para usar la segunda opción no se puede usar un dato predefinido de los que puse más arriba, en este caso hay que usar una palabra que lo identifique puesto que la restricción por ser un número o un texto se aplicará en el simpleType. Por ejemplo, para un DNI se podría poner type="tipoDNI" y que linkee con un simpleType que tenga un patrón para DNI.  
 
-De las propiedades de los elementos de momento expliqué solo dos, *name* y *type*, pero hay más:
+-----
 
-1. **name**: Se usa para atribuir una etiqueta del XML al elemento del Schema.  
-2. **type**: Se utiliza para aplicar una restricción del tipo xs:integer o xs:string, o para referenciar a una restricción externa al elemento.  
-3. **maxOccurs**: Establece un número máximo de ocurrencias de un elemento puesto que por defecto debe aparecer una vez, si a esta propiedad la ponemos *unbounded* significará que no tendrá límite.  
-4. **minOccurs**: Establece un número mínimo de ocurrencias de un elemento, si ponemos que es cero, hacemos que sea opcional.  
-5. **default**: 
+#### Las restricciones en los simpleType
 
+Las restricciones son el principal método para hacer que un Schema solo valide solo determinadas formas de XML. Una restricción tiene la forma de ```<xs:restriction base="tipoDeBase"> * * * </xs:restriction>``` y dentro de *restriction* pueden ir estas opciones:  
+1. **length**: Establece una longitud fija para una cadena de caracteres.  
+2. **minLength**:  Establece una longitud mínima para una cadena de texto.  
+3. **maxLength**: Establece una longitud máxima para una cadena de texto.  
+4. **pattern**:  Se usa para crear un patrón mediante expresiones regulares.  
+5. **enumeration**:  Enumera posibles valores
+6. **maxInclusive**: Pone un máximo al rango que se establece incluyendo el valor que se asigna.  
+7. **maxExclusive**: Pone un máximo al rango que se establece excluyendo el valor que se asigna.  
+8. **minInclusive**: Pone un mínimo al rango que se establece incluyendo el valor que se asigna.  
+9. **minExclusive**: Pone un mínimo al rango que se establece excluyendo el valor que se asigna.  
 
+Si quisieramos limitar la edad de las personas a un determinado rango, como por ejemplo entre 18 y 45 años haríamos lo siguiente. Lo pondré como si estuviera dentro del elemento.  
 
+```xsd
+<xs:element name="edad">
+	<xs:simpleType>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="18"/>
+			<xs:maxInclusive value="45"/>
+		</xs:restriction>
+	<xs:simpleType>
+</xs:element>
+```
 
+-----
+Si quisieramos establecer una longitud máxima de 30 caracteres para un nombre haríamos los siguiente. Esta vez lo pondré fuera del elemento.  
 
+```xsd
+<xs:element name="nombre" type="tipoNombre"/>
 
+<xs:simpleType name="tipoNombre">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="30"/>
+	</xs:restriction>
+<xs:simpleType>
+
+```
+
+-----
+Si tenemos que validar un datos como un DNI tendremos que usar un patrón.  
+
+```xsd
+<xs:element name="dni" type="tipoDNI"/>
+
+<xs:simpleType name="tipoDNI">
+	<xs:restriction base="xs:string">
+		<xs:pattern value="[0-9]{8}[A-Z]"/>
+	</xs:restriction>
+<xs:simpleType>
+```
+
+#### Las listas
+Una lista en un XML es la sucesión de valores dentro de la misma etiqueta que tienen esta forma:  
+
+```xml
+<edadesParticipantes>19 31 26 52 18 32 27 22 36 31 46</edadesParticipantes>
+```
+
+Aunque no sea la mejor forma de almacenar información, se puede hacer y también validar con un Schema. La anterior situación se podría solucionar...  
+
+```xsd
+<xs:element name="edadesParticipantes" type="tipoEdadesParticipantes"/>
+
+<xs:simpleType name="tipoEdadesParticipantes">
+	<xs:list itemType="xs:integer"/>
+</xs:simpleType>
+```
+
+#### Las uniones
+Las uniones tienen la función de unir varios tipos de simpleType, como puede ser el caso de en un campo tener un DNI. o si no se tiene, poder poner un texto que diga "No tiene DNI".  
+
+```xsd
+<xs:element name="dni" type="tipoDNI"/>
+
+<xs:simpleType name="tipoDNI">
+	<xs:union>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[0-9]{8}[A-Z]"/>
+			</xs:restriction>
+		</xs:simpleType>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="No tiene DNI"/>
+			</xs:restriction>
+		</xs:simpleType>
+<xs:simpleType>
+```
+
+También está la posibilidad de unir simpleType que no estén dentro del ```xs:union``` usando el *memberTypes*, este atributo tambíen sirve para unir con un tipo predefinido que puse al principio.   
+
+```xsd
+<xs:element name="dni" type="tipoDNI"/>
+
+<xs:simpleType name="tipoDNI">
+	<xs:union memberTypes="tipoDNI noHayDNI">
+<xs:simpleType>
+
+<xs:simpleType name="tipoDNI">
+	<xs:restriction base="xs:string">
+		<xs:pattern value="[0-9]{8}[A-Z]"/>
+	</xs:restriction>
+</xs:simpleType>
+		
+<xs:simpleType name="noHayDNI">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="No tiene DNI"/>
+	</xs:restriction>
+</xs:simpleType>
+```
+
+### Los complexType
+Los complexType son aquellos elementos que no contienen datos en su interior, contienen otros elementos que, o bien pueden ser complejos y contener más etiquetas en su interior, o simples y contener datos como los que estuvimos viendo hasta ahora.  
+Para proclamar un elemento complejo se hace de la siguiente forma:  
+
+```xsd
+<xs:element name="aula">
+	<xs:complexType>
+	*
+	*
+	*
+	</xs:complexType>
+</xs:element>
+```
+
+Y dentro de *complexType* pueden ir tres etiquetas con sus respectivos usos.  
+1. **xs:sequence**: Es el más utilizado ya que se usa para realizar una secuencia de elementos ordenada, esto quiere decir que los elementos del XML deberán ir en el orden que marcar el Schema.  
+2. **xs:all**: Con este los elementos pueden estar desordenados, pero aparecerán como máximo una única vez, por lo que los elementos no pueden llevar *maxOccurs*.  
+3. **xs:choice**: De todos los elementos que se puedan poner dentro de esta etiqueta solo se podrá escoger uno. Se puede combinar poniendole como atributo el maxOccurs para que se pueda escoger un atributo multiples veces.  
+
+**Todos estos tipos de secuencias se pueden combinar entre si.**  
+
+```xsd
+<xs:element name="instituto">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="aula">
+				<complexType>
+					<xs:sequence>
+						<xs:element name="numeroMesas"/>
+						<xs:element name="numeroSilla"/>
+					</xs:sequence>
+					<xs:all>
+						<xs:element name="profesor"/>
+						<xs:element name="email"/>
+					</xs:all>
+					<xs:choice>
+						<xs:element name="dni"/>
+						<xs:element name="numeroPasaporte"/>
+					</xs:choice>
+				</complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+```
+
+En el anterior caso, el Schema solo validaría los XML que tuvieran una única aula, y que los elemenos del dentro del aula fueran: El número de mesas y el número de sillas en ese orden, después pueden ir el profesor y el email en cualquier orden y por último el dni o el número de pasaporte, pero solo uno de eso dos.  
 
 
 
