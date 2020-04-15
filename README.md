@@ -3,10 +3,23 @@
 ## Índice
 - [Que es un XML](#que-es-un-xml)
 - [Que es un DTD](#que-es-un-dtd)
-- [Donde se puede situar un DTD](#donde-se-puede-situar-un-dtd)
-- [Declaración del contenido de los elementos](#declacración-del-contenido-de-los-elementos)
-- [Declaración de los atributos](#declaración-de-atributos)
-- [Ejemplo de validación con un DTD](#ejemplo-de-validación-con-un-dtd)
+	- [Donde se puede situar un DTD](#donde-se-puede-situar-un-dtd)
+	- [Declaración del contenido de los elementos](#declacración-del-contenido-de-los-elementos)
+	- [Declaración de los atributos](#declaración-de-atributos)
+	- [Ejemplo de validación con un DTD](#ejemplo-de-validación-con-un-dtd)
+- [Que es un Schema](#Que-es-un-Schema)
+	- [Tipos de datos predefinidos](#Tipos-de-datos-predefinidos)
+	- [Elementos simples](#Elementos-simples)
+	- [Propiedades de los elementos](#Propiedades-de-los-elementos)
+	- [Los simpleType](#Los-simpleType)
+		- [Las restricciones en los simpleType](#Las-restricciones-en-los-simpleType)
+		- [Las listas](#Las-listas)
+		- [Las uniones](#Las-uniones)
+	- [Los complexType](#Los-complexType)
+	- [Grupos de elementos](#Grupos-de-elementos)
+	- [Grupos de atributos](#Grupos-de-atributos)
+	- [Ejercicio resuelto](#Ejercicio-resuelto)
+
 
 ## Que es un XML
 Un archivo XML es un documento que se creó para estructurar, almacenar y tranportar la información. Un XML es un texto acotado por etiquetas que establecemos nosotros.  
@@ -363,47 +376,82 @@ Para proclamar un elemento complejo se hace de la siguiente forma:
 ```
 
 Y dentro de *complexType* pueden ir tres etiquetas con sus respectivos usos.  
-1. **xs:sequence**: Es el más utilizado ya que se usa para realizar una secuencia de elementos ordenada, esto quiere decir que los elementos del XML deberán ir en el orden que marcar el Schema.  
-2. **xs:all**: Con este los elementos pueden estar desordenados, pero aparecerán como máximo una única vez, por lo que los elementos no pueden llevar *maxOccurs*.  
-3. **xs:choice**: De todos los elementos que se puedan poner dentro de esta etiqueta solo se podrá escoger uno. Se puede combinar poniendole como atributo el maxOccurs para que se pueda escoger un atributo multiples veces.  
-
-**Todos estos tipos de secuencias se pueden combinar entre si.**  
+1. **xs:sequence**: Es el más utilizado ya que se usa para realizar una **secuencia de elementos ordenada**, esto quiere decir que los elementos del XML deberán ir en el orden que marcar el Schema.  
+2. **xs:all**: Con este los elementos **pueden estar desordenados**, pero aparecerán como máximo una única vez, por lo que los elementos no pueden llevar *maxOccurs*.  
+3. **xs:choice**: De todos los elementos que se puedan poner dentro de esta etiqueta **solo se podrá escoger uno**. Se puede combinar poniendole como atributo el maxOccurs para que se pueda escoger un atributo multiples veces.  
 
 ```xsd
 <xs:element name="instituto">
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="aula">
-				<complexType>
+				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="numeroMesas"/>
-						<xs:element name="numeroSilla"/>
+						<xs:element name="numeroSillas"/>
 					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="profesor">
+				<xs:complexType>
 					<xs:all>
-						<xs:element name="profesor"/>
+						<xs:element name="nombre"/>
 						<xs:element name="email"/>
 					</xs:all>
-					<xs:choice>
-						<xs:element name="dni"/>
-						<xs:element name="numeroPasaporte"/>
-					</xs:choice>
-				</complexType>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="alumno">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="dni"/>
+							<xs:element name="numeroPasaporte"/>
+						</xs:choice>
+					</xs:sequence>
+				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
 ```
+ 
+En este esquema el elemento *aula* tendrá dos elementos, *numeroMesas* y *numeroSillas* en ese orden. El elemento *profesor* tiene dos elementos hijos que pueden ir en cualquier orden o tambíen pueden no aparecer. Y el elemento *alumno* tiene dos elementos hijos de los cuales solo se podrá escoger uno de los dos.  
 
-En el anterior caso, el Schema solo validaría los XML que tuvieran una única aula, y que los elemenos del dentro del aula fueran: El número de mesas y el número de sillas en ese orden, después pueden ir el profesor y el email en cualquier orden y por último el dni o el número de pasaporte, pero solo uno de eso dos.  
+### Grupos de elementos
 
+Los grupos de elementos permiten la agrupación de los mismos si estos se usan varios elementos complejos. Es decir, se crean varios elementos, cada uno con sus restricciones y posteriormente se podrá utilizar este grupo de elementos un número ilimitado de veces.  
+Para crear un grupo, se hace lo siguiente:  
 
+```xsd
+<xs:group name="nombreDelGrupo">
+*
+*
+*
+</xs:group>
+```
 
+**Es importante recordar que dentro de *group* hay que poner una de las etiquetas que indicaban el orden de los elementos en el *complexType*, se puede poner *xs:sequence*, *xs:all* o bien *xs:choice*.**  
 
+Para referir un grupo se tiene escribir ```<xs:group ref="nombreDelGrupo"/>``` dentro del elemento complejo.  
 
+### Grupos de atributos
 
+Un grupo de atributos tiene la misma función y también una forma muy similar de hacer que la de los grupos de elementos.  
+Para crear un grupo de atributos y referenciarlo se hará lo siguiente.  
 
+```xsd
+<xs:attributeGroup name="nombreGrupo">
+*
+*
+*
+</xs:attributeGroup>
 
+<xs:attributeGroup ref="nombreGrupo"/> 
+```
 
+### Ejercicio resuelto
 
-
+Ahora en los dos siguientes links habrá un XML y un XSD que lo valide.  
+[Enlace al XML](./cursoClaves.xml)  
+[Enlace al XSD](./cursoClaves.xsd)  
 
