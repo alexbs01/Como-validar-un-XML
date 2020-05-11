@@ -1,8 +1,3 @@
-# Que es XPath
-
-XPath es un lenguaje de consulta usado para seleccionar nodos de un documento XML, mostrar información o calcular valores de dichos documentos ya sean sumas, cuentas, etc.
-El sistema de etiquetas de un XML se podría considerar como si fuera un sistema de archivos de un ordenador, en la que todas la etiquetas descienden del raíz. En XML la etiqueta raíz equivaldría al directorio **/** en *Linux* o a **C:/** en *Windows*.
-
 ## Nomenclatura
 
 - **/**: Si está al principio de la consulta, la etiqueta que se deberá de poner será la etiqueta padre. Si no es lo primero que se pone, indicará que es hijo de la etiqueta anterior.  
