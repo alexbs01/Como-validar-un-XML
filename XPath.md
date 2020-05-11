@@ -50,8 +50,21 @@ Pero para hacer consultas más **complejas** se necesitan hacer restricciones, y
 
 - **[numero]**: Si indicamos un número mostrará el elemento que esté en esa posición, como podemos no saber el número de veces que aparece un elemento es fácil de que pase, para saber el último se usa la función **last()**.  
 Para saber el primer alumno de cada curso se hará ```//curso/alumno[1]```.  
-Y para saber el último alumno de todos los que aparecen se deberá poner ```//alumno[last()]```.  
+Para saber el último alumno de todos los que aparecen se deberá poner ```//alumno[last()]```.  
+Para saber el penúltimo alumno de todos los que hay se puede hacer ```//alumno[last()-1]```
 
 - **Los operadores**: En XPath se pueden usar operadores lógicos **and**, **or** y **not()**; aritméticos **+**, **-**, **\***, **div** y **mod**; y de comparación como **=**, **!=**, **<**, **>**, **<=** y **>=**.  
 Van entre corchetes de esta forma; ```//alumno[@edad<=17]/nombre```, esto mostrará el nombre de los alumnos menores de edad.  
+
+## Funciones útiles
+
+- **sum(x)**: Tiene la función de sumar lo que pongamos entre paréntesis, si en el caso de que tuvieramos acceso a un XML de un cine y quisieramos saber la duración total de todas las películas que hay en cartelera, haríamo: ```sum(//horas)```, y nos devolvría e número total de horas.  
+
+- **starts-with(x, "s")**: Se usa para buscar los elementos que comienzan por la cadena **s**. Si quisieramos saber la dirección de todos los alumnos que tienen el nombre *José* como primer nombre tendríamos que hacer: ```//alumno[starts-with(nombre, "José")]/direccion```.  
+
+- **contains(x, "s")**: Si queremos buscar los elementos que contienen una palabra, pero que no necesariamente deben empezar con ella posemos usar esta función de la misma manera que stats-with.  
+
+- **count(x)**: Se usa de la misma forma que **sum()**, solo que en vez de sumar cuenta, para contar el número de alumnos se haría: ```count(//alumno)```.  
+
+- **position()**: Tiene la función de mostrar los elementos de una o varias posiciones, poneiendo [3] se podía ver el elemento de la tercera posición, pero para ver los tres primeros elementos se usa **position()**, ```//alumno[position()<=3]```.  
 
