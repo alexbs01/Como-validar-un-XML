@@ -272,3 +272,8 @@ Ahora en los dos siguientes links habrá un XML y un XSD que lo valide.
 [Enlace al XML](./cursoClaves.xml)  
 [Enlace al XSD](./cursoClaves.xsd)  
 
+## Ejercicios de Schemas
+
+Hay ejercios que realicé de la parte de Schemas en el repositorio de dedicado a la asignatura de Lenguajes de Marcas.  
+[Ejercicios de Schemas](https://github.com/alexbs01/LenguajesDeMarcas/tree/master/Ejercicios/XML/Schemas)
+

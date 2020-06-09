@@ -21,6 +21,7 @@
 	- [Ejercicio resuelto](./Schemas.md#Ejercicio-resuelto)
 - [Que es XPath](#Que-es-XPath)
 	- [Como usar XPath](./XPath.md)
+- [Ejercicios hechos durante el curso de Lenguajes de Marcas](https://github.com/alexbs01/LenguajesDeMarcas/tree/master/Ejercicios/XML)
 
 
 ## Que es un XML

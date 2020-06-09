@@ -120,3 +120,6 @@ Ahora con este ejemplo tendremos una visión mejor de como se valida un XML con 
 				moneda (euro|dolar) "euro">
 ```
 
+## Ejercios de DTD
+En el repositorio dedicado a la asignatura de Lenguajes de Marcas están los ejercicios que realicé durante el curso en la parte de DTD.  
+[Ejercicios de DTD.](https://github.com/alexbs01/LenguajesDeMarcas/tree/master/Ejercicios/XML/DTD)

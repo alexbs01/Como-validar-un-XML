@@ -63,3 +63,7 @@ Van entre corchetes de esta forma; ```//alumno[@edad<=17]/nombre```, esto mostra
 
 - **position()**: Tiene la función de mostrar los elementos de una o varias posiciones, poneiendo [3] se podía ver el elemento de la tercera posición, pero para ver los tres primeros elementos se usa **position()**, ```//alumno[position()<=3]```.  
 
+## Ejercicios de XPath
+
+Hay ejercios de la parte de XPath que realicé en la asignatura de Lenguajes de Marcas en el repositorio con el mismo nombre.  
+[Ejercicios de XPath.](https://github.com/alexbs01/LenguajesDeMarcas/tree/master/Ejercicios/XML/XPath)
